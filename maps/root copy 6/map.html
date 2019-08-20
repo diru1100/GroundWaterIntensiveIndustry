@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Leaflet Example - asmaloney.com</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" type="text/css" href="tableStyle.css" /> 
+
+    <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v1.4.0/leaflet.css" />
+
+    <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+    <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v1.4.0/leaflet.js'></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script type='text/javascript' src='https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js'></script>
+
+    <script type="text/javascript">
+      
+      function click(){
+      document.getElementByClass('industryTable').display = "block";
+    
+      }
+    </script>
+
+    <style>
+    .leaflet-popup-tip-container {
+    display: none;
+} 
+    </style>
+    
+  </head>
+
+  <body>
+
+
+    <div id="map" style="float: left; width: 1000px; height: 800px; border: 1px solid #AAA;">
+    </div>
+    <div id="right" style="float: right; background-color: 'blue">
+      <table class="industryTable"  >
+        <tfoot>
+        <tr>
+        </tr>
+        </tfoot>
+        <tbody>
+          <tr>
+          <td>Name</td>
+          <td id="name"></td>
+          </tr>
+          <tr>
+          <td >Limit</td>
+          <td id="limit"></td>
+          </tr>
+          <tr>
+          <td >Extraction</td>
+          <td id="extraction"></td>
+          </tr>
+          <tr>
+          <td>Recharge</td>
+          <td id="recharge"></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <?php include('ZonePieChart.php') ?>
+
+    <script type='text/javascript' src='js/leaf-demo.js'></script>
+    
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

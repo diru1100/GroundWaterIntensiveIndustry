@@ -1,0 +1,109 @@
+var map = L.map('map', {
+  center: [17.0, 76.0],
+  minZoom: 2,
+  zoom: 6
+})
+
+var currentZoom = map.getZoom();
+var industryIconOptions = {
+  iconUrl: 'Images/Industry.png',
+  iconSize: [20, 20]
+};
+
+var SafeIconOptions = {
+  iconUrl: 'Images/Safe.png',
+  iconSize: [20, 20]
+};
+
+var SemiCriticalIconOptions = {
+  iconUrl: 'Images/SemiCritical.png',
+  iconSize: [20, 20]
+};
+
+var CriticalIconOptions = {
+  iconUrl: 'Images/Critical.png',
+  iconSize: [20, 20]
+};
+var OverExploitedIconOptions = {
+  iconUrl: 'Images/OverExploited.png',
+  iconSize: [20, 20]
+};
+
+
+var industryIcon = L.icon(industryIconOptions);
+
+var SafeIcon = L.icon(SafeIconOptions);
+var SemiCriticalIcon = L.icon(SemiCriticalIconOptions);
+var CriticalIcon = L.icon(CriticalIconOptions);
+var OverExploitedIcon = L.icon(OverExploitedIconOptions);
+
+var safeZone = L.markerClusterGroup();
+var semiCriticalZone = L.markerClusterGroup();
+var criticalZone = L.markerClusterGroup();
+var overExploitedZone = L.markerClusterGroup();
+var industries= L.markerClusterGroup();
+var zones = new L.LayerGroup();
+
+
+
+function ajax(e) {
+  console.log('Ajax called.');
+  var oReq = new XMLHttpRequest(); //New request object
+  oReq.onload = function () {
+    var js = JSON.parse(this.responseText);
+    var j = 0;
+    for (var i in js[0]) {
+      marker = L.marker([js[0][i].LATITUDE, js[0][i].LONGITUDE], { icon: industryIcon });
+      // console.log('hi');
+      // markers.addLayer(L.marker(getRandomLatLng(map)));
+      industries.addLayer(marker);
+
+    }
+    for(var i in js[1]) {
+
+      if(js[1][i].RATIO <=30){
+              console.log(js[1][i].RATIO);
+
+         marker = L.marker([js[1][i].LATITUDE, js[1][i].LONGITUDE], { icon: SafeIcon }); 
+         zones.addLayer(marker);
+      }else if(js[1][i].RATIO > 30 && js[1][i].RATIO <= 75){
+         marker = L.marker([js[1][i].LATITUDE, js[1][i].LONGITUDE], { icon: SemiCriticalIcon }); 
+         zones.addLayer(marker);
+      }else if(js[1][i].RATIO > 75 && js[1][i].RATIO <= 90){
+         marker = L.marker([js[1][i].LATITUDE, js[1][i].LONGITUDE], { icon: CriticalIcon }); 
+         zones.addLayer(marker);      
+      }else if(js[1][i].RATIO > 90){
+         marker = L.marker([js[1][i].LATITUDE, js[1][i].LONGITUDE], { icon: OverExploitedIcon });
+         zones.addLayer(marker);       
+      }
+
+    }
+
+  };
+  oReq.open("get", "data.php", true);
+  //                               ^ Don't block the rest of the execution.
+  //                                 Don't wait until the request finishes to 
+  //                                 continue.
+  oReq.send();
+  return false;
+};
+
+ajax();
+
+map.on('zoomend',function(){
+  if(map.getZoom() <=10){
+    map.removeLayer(zones);
+  }
+});
+
+L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  subdomains: ['a', 'b', 'c']
+}).addTo(map);
+
+map.addLayer(industries);
+map.addLayer(zones);
+
+
+
+
